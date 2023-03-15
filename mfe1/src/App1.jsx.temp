@@ -1,0 +1,20 @@
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+
+import { Provider, useDispatch, useSelector } from "react-redux";
+import Counter from "./counter";
+import store from "./store";
+
+const App = () => {
+  return (
+    // <Suspense fallback="..loading">
+    <Provider store={store}>
+      <Counter />
+    </Provider>
+    // </Suspense>
+  );
+};
+
+export default App;
+// ReactDOM.render(<App />, document.getElementById("app"));

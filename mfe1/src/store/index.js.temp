@@ -1,0 +1,91 @@
+import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { pubsub } from "topics/pubsub";
+
+//#region pubsubMiddleware.ts
+export const pubsubMiddleware =
+  ({ dispatch }) =>
+  (next) =>
+  (action) => {
+    if (action.type === "pubsub/publish") {
+      const { topic, data } = action.payload;
+      dispatch({
+        type: `pb/pub/${topic}`,
+        payload: { topic, data },
+      });
+
+      pubsub.publish(topic, data);
+    } else if (action.type === "pubsub/subscribe") {
+      const { topic } = action.payload;
+      // Dispatch the subscribe action to update the Redux store
+      dispatch({
+        type: "pb/sub/register",
+        payload: { topic },
+      });
+
+      const pubsubCallback = (data) => {
+        dispatch({
+          type: `pb/sub/${topic}`,
+          payload: { topic, data },
+        });
+      };
+
+      // Check if the subscriber has already been registered
+      if (!pubsub.subscribers[topic]) {
+        pubsub.subscribe(topic, pubsubCallback);
+      }
+    } else if (action.type === "pubsub/unsubscribe") {
+      const { topic } = action.payload;
+
+      // Dispatch the unsubscribe action to update the Redux store
+      dispatch({
+        type: `pb/unsub/${topic}`,
+        payload: { topic },
+      });
+
+      pubsub.unsubscribe(topic, "");
+    } else {
+      return next(action);
+    }
+  };
+
+export const subscribe = (topic) => ({
+  type: "pubsub/subscribe",
+  payload: { topic },
+});
+
+export const unsubscribe = (topic) => ({
+  type: "pubsub/unsubscribe",
+  payload: { topic },
+});
+
+export const publish = (topic, data) => ({
+  type: "pubsub/publish",
+  payload: { topic, data },
+});
+//#endregion
+
+//#region reducer.ts
+const mySlice = createSlice({
+  name: "mySlice",
+  initialState: {
+    data: null,
+  },
+  reducers: {
+    setData: (state, action) => {
+      state.data = action.payload;
+    },
+  },
+});
+export const { setData } = mySlice.actions;
+//#endregion
+
+//#region store/index.ts
+// Create a Redux store that includes the middleware and the pubsub slice
+const store = configureStore({
+  reducer: mySlice.reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(pubsub.middleware),
+});
+
+export default store;
+//#endregion

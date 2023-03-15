@@ -1,0 +1,21 @@
+{
+  "name": "mfe-pubsub",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "turbo": "^1.2.5"
+  },
+  "scripts": {
+    "start": "yarn turbo run start",
+    "build": "yarn turbo run build"
+  },
+  "workspaces": [
+    "host",
+    "mfe1",
+    "mfe2",
+    "topics"
+  ],
+  "dependencies": {
+    "react-router-dom": "^6.8.2"
+  }
+}
