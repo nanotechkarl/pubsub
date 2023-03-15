@@ -15,21 +15,21 @@ const Counter = () => {
     const callback = (data) => {
       setCounter(data);
     };
-    pubsubIsolated.subscribe(ADVISORIES.counter, callback);
-    // dispatch(pubsub.subscribeAction(ADVISORIES.counter));
-    // setCounter(pubsub.getState(ADVISORIES.counter));
+    pubsubIsolated.subscribeAction(ADVISORIES.counter, callback, dispatch);
 
     return () => {
-      pubsubIsolated.unsubscribe(ADVISORIES.counter, callback);
-      // dispatch(pubsub.unsubscribeAction(ADVISORIES.counter));
+      pubsubIsolated.unsubscribeAction(ADVISORIES.counter, callback, dispatch);
     };
-  }, [dispatch, counter]);
+  }, [dispatch]);
 
   const handleClick = () => {
     const increment = counter + 1;
-    // dispatch(pubsubIsolated.publishAction(ADVISORIES.counter, increment));
-    pubsubIsolated.publish(ADVISORIES.counter, increment);
-    setCounter(increment);
+    const res = pubsubIsolated.publishAction(
+      ADVISORIES.counter,
+      increment,
+      dispatch
+    );
+    setCounter(res.payload.data);
   };
 
   const handleClick1 = () => {

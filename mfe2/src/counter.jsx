@@ -11,17 +11,14 @@ const Counter = () => {
 
   useEffect(() => {
     const callback = (data) => {
-      console.log("receive:", data);
       setCounter(data);
     };
-    pubsubIsolated.subscribe(ADVISORIES.counter, callback);
-    // dispatch(pubsubIsolated.subscribeAction(ADVISORIES.counter));
-    // setCounter(pubsubIsolated.getState(ADVISORIES.counter));
+    pubsubIsolated.subscribeAction(ADVISORIES.counter, callback, dispatch);
+
     return () => {
-      pubsubIsolated.unsubscribe(ADVISORIES.counter, callback);
-      // dispatch(pubsubIsolated.unsubscribeAction(ADVISORIES.counter));
+      pubsubIsolated.unsubscribeAction(ADVISORIES.counter, callback, dispatch);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

@@ -1,10 +1,9 @@
 // pubsub.js
 
 export default class Pubsub {
-  constructor(storeName) {
+  constructor() {
     this.subscribers = {};
     this.middleware = this.middleware.bind(this);
-    this.storeName = storeName;
   }
 
   publish(topic, data) {
@@ -53,59 +52,58 @@ export default class Pubsub {
     return data;
   }
 
-  publishAction(topic, data) {
-    return {
+  publishAction(topic, data, dispatch) {
+    const action = {
       type: "pubsub/publish",
       payload: { topic, data },
     };
+    dispatch(action);
+    this.publish(topic, data);
+    return action;
   }
 
-  subscribeAction(topic) {
-    return {
+  subscribeAction(topic, callback, dispatch) {
+    const action = {
       type: "pubsub/subscribe",
       payload: { topic },
     };
+    dispatch(action);
+    this.subscribe(topic, callback);
+    return action;
   }
 
-  unsubscribeAction(topic) {
-    return {
+  unsubscribeAction(topic, callback, dispatch) {
+    const action = {
       type: "pubsub/unsubscribe",
       payload: { topic },
     };
+    dispatch(action);
+    this.unsubscribe(topic, callback);
+    return action;
   }
 
   middleware({ dispatch }) {
     return (next) => (action) => {
+      console.log("action :", action);
       if (action.type === "pubsub/publish") {
         const { topic, data } = action.payload;
         dispatch({
-          type: `pb/pub/${this.storeName}/${topic}`,
+          type: `pb/pub/${topic}`,
           payload: { topic, data },
         });
-        this.publish(topic, data);
+        // this.publish(topic, data);
       } else if (action.type === "pubsub/subscribe") {
         const { topic } = action.payload;
         dispatch({
-          type: `pb/sub/${this.storeName}/${topic}`,
+          type: `pb/sub/${topic}`,
           payload: { topic },
         });
-        const pubsubCallback = (data) => {
-          dispatch({
-            type: `pb/sub/${this.storeName}/${topic}`,
-            payload: { topic, data },
-          });
-        };
-        if (!this.subscribers[topic]) {
-          this.subscribers[topic] = [];
-          this.subscribers[topic].push(pubsubCallback); // add the callback to subscribers
-        }
       } else if (action.type === "pubsub/unsubscribe") {
         const { topic } = action.payload;
         dispatch({
-          type: `pb/unsub/${this.storeName}/${topic}`,
+          type: `pb/unsub/${topic}`,
           payload: { topic },
         });
-        this.unsubscribe(topic, ""); // remove the subscriber
       } else {
         return next(action);
       }
@@ -113,4 +111,4 @@ export default class Pubsub {
   }
 }
 
-export const pubsub = new Pubsub("1");
+export const pubsub = new Pubsub();
