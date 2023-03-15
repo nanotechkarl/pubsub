@@ -6,13 +6,14 @@ import { ADVISORIES } from "topics/topics";
 import { Provider } from "react-redux";
 import store, { pubsubIsolated } from "./store";
 import Counter from "./counter";
+import Sample from "./sample";
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <>
       <Counter />
-      {/* <Counter /> */}
-    </Provider>
+      <Sample />
+    </>
   );
 };
 

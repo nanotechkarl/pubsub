@@ -51,6 +51,8 @@ module.exports = {
         "./mfe1": "./src/App.jsx",
         "./share": "./src/utils/sharingModule.js",
         "./store": "./src/store",
+        "./mfe1/counter": "./src/counter",
+        "./mfe1/sample": "./src/sample",
       },
       shared: {
         ...deps,

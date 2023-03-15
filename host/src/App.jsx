@@ -4,6 +4,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Link, NavLink } from "react-router-dom";
 import "./index.css";
 const Mfe1 = React.lazy(() => import("mfe1/mfe1"));
+const Counter = React.lazy(() => import("mfe1/mfe1/counter"));
+const Sample = React.lazy(() => import("mfe1/mfe1/sample"));
+
 const Mfe2 = React.lazy(() => import("mfe2/mfe2"));
 
 const App = () => (
@@ -15,12 +18,20 @@ const App = () => (
           index
           element={
             <>
-              <Mfe1 />
-              <Mfe2 />
+              {/* <Mfe1 /> */}
+              <Counter />
+              <Sample />
+              {/* <Mfe2 /> */}
             </>
           }
         />
-        <Route path="mfe2" element={<Mfe2 />} />
+        <Route
+          path="mfe2"
+          element={
+            // <Mfe2 />
+            <Sample />
+          }
+        />
       </Routes>
     </Suspense>
   </BrowserRouter>

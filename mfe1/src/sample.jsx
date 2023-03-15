@@ -7,7 +7,7 @@ import { setData } from "./store";
 import { pubsubIsolated } from "./store";
 import withRedux from "./provider";
 
-const Counter = () => {
+const Sample = () => {
   const dispatch = useDispatch();
   const [counter, setCounter] = useState(0);
   const state = useSelector((state) => state);
@@ -38,7 +38,14 @@ const Counter = () => {
   };
 
   return (
-    <div style={{ border: "1px solid black", padding: "10px" }}>
+    <div
+      style={{
+        border: "1px solid red",
+        padding: "10px",
+        marginTop: "10px",
+        color: "red",
+      }}
+    >
       <h4>MFE1</h4>
       <p>result: {counter}</p>
       <p> Pubsub action call in store</p>
@@ -51,4 +58,4 @@ const Counter = () => {
   );
 };
 
-export default withRedux(Counter);
+export default withRedux(Sample);
