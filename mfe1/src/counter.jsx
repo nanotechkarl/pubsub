@@ -39,7 +39,7 @@ const Counter = () => {
 
   return (
     <div style={{ border: "1px solid black", padding: "10px" }}>
-      <h4>MFE1</h4>
+      <h4>MFE1 Counter Component</h4>
       <p>result: {counter}</p>
       <p> Pubsub action call in store</p>
       <button onClick={handleClick}>Publish</button>

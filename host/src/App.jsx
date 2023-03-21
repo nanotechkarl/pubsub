@@ -28,8 +28,10 @@ const App = () => (
         <Route
           path="mfe2"
           element={
-            // <Mfe2 />
-            <Sample />
+            <>
+              <Mfe2 />
+              <Sample />
+            </>
           }
         />
       </Routes>
